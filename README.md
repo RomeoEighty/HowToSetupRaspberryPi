@@ -112,13 +112,15 @@ $ cd
 $ sudo apt-get install -y libssl-dev libreadline-dev
 $ rbenv install -l
 $ rbenv install 2.5.1
+$ rbenv rehash
+$ rbenv global 2.5.1
 ```
 
 tmux
 ```
 $ mkdir build
 $ cd build
-$ sudo apt-get -y install libevent-dev libncurses5-dev autoconf automake pkg-config
+$ sudo apt-get -y install libevent-dev libncurses5-dev autoconf automake pkg-config bc
 $ git clone https://github.com/tmux/tmux.git
 $ cd tmux
 $ git checkout [version]
@@ -132,5 +134,27 @@ $ make -j4
 $ sudo make install
 ```
 
+# security
+```
+$ sudo apt-get -y install fail2ban ufw
+$ sudo systemctl status fail2ban
+# kernel upgrade might be needed
+$ sudo rpi-update
+$ sudo ufw default deny
+$ sudo ufw allow from 192.168.3.0/24
+$ sudo ufw allow proto tcp from 192.168.3.0/24 to any port [port]
+$ sudo ufw enable
+```
+if you want to delete some of rules
+```
+$ sudo ufw status numbered
+$ sudo ufw delete [num]
+```
+
+ffmpeg
+```
+```
+
 # TODO
 - static IP config
+- ffmpeg
