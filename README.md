@@ -136,7 +136,7 @@ $ sudo make install
 
 # security
 ```
-$ sudo apt-get -y install fail2ban ufw
+$ sudo apt-get -y install fail2ban ufw logwatch
 $ sudo systemctl status fail2ban
 # kernel upgrade might be needed
 $ sudo rpi-update
@@ -149,6 +149,26 @@ if you want to delete some of rules
 ```
 $ sudo ufw status numbered
 $ sudo ufw delete [num]
+```
+
+## node.js
+```
+$ sudo apt-get -y install nodejs npm
+$ sudo npm cache clean
+$ sudo npm install n -g
+$ npm -v 
+$ node -v
+$ sudo n stable
+$ sudo apt-get -y purge nodejs npm
+$ npm -v 
+$ node -v
+$ sudo npm install neovim -g
+```
+you can change versions
+```
+$ sudo n 5.2.0
+$ node -v
+v5.2.0
 ```
 
 ffmpeg
