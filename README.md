@@ -173,6 +173,39 @@ v5.2.0
 
 ffmpeg
 ```
+# $ sudo apt-get update
+# $ sudo apt-get upgrade
+# $ sudo sh -c 'echo "deb http://www.deb-multimedia.org jessie main non-free" >> /etc/apt/sources.list.d/deb-multimedia.list'
+# $ sudo sh -c 'echo "deb-src http://www.deb-multimedia.org jessie main non-free" >> /etc/apt/sources.list.d/deb-multimedia.list'
+# $ sudo apt-get update 
+# $ sudo apt-get install deb-multimedia-keyring
+$ sudo apt-get update 
+$ sudo apt-get -y --force-yes install nettle-dev gnutls-bin libmp3lame-dev libx264-dev yasm git autoconf automake build-essential libass-dev libfreetype6-dev libtheora-dev libtool libvorbis-dev pkg-config texi2html zlib1g-dev
+$ sudo apt-get -y install build-essential libmp3lame-dev libvorbis-dev libtheora-dev libspeex-dev yasm pkg-config libopenjpeg-dev libx264-dev
+$ git clone git://git.videolan.org/x264
+$ cd x264
+$ sudo sh -c "./configure --host=arm-unknown-linux-gnueabi --enable-static --disable-opencl; make -j4; make install"
+$ cd ..
+$ git clone git://source.ffmpeg.org/ffmpeg.git
+$ cd ffmpeg/
+$ sudo sh -c "./configure --arch=armel --target-os=linux --enable-gnutls --enable-gpl --enable-libx264 --enable-nonfree; make -j4; make install"
+```
+
+# get repositories
+create ssh key for github.com
+```
+$ ssh-keygen -t ed25519
+$ cat ~/.ssh/config
+Host github github.com
+    HostName github.com
+    IdentityFile ~/.ssh/id_git_ed25519
+    User git
+$ chmod 600 ~/.ssh/config
+$ ssh -T github
+```
+create ssh list of repositories
+```
+$ cat sshlist | xargs -n1 git clone
 ```
 
 # TODO
