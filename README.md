@@ -207,6 +207,11 @@ create ssh list of repositories
 ```
 $ cat sshlist | xargs -n1 git clone
 ```
+# unattended-upgrades
+```
+$ sudo apt-get -y install unattended-upgrade
+$ sudo dpkg-reconfigure -plow unattended-upgrades
+```
 
 # TODO
 - static IP config
