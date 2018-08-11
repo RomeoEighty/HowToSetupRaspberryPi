@@ -188,7 +188,7 @@ $ sudo sh -c "./configure --host=arm-unknown-linux-gnueabi --enable-static --dis
 $ cd ..
 $ git clone git://source.ffmpeg.org/ffmpeg.git
 $ cd ffmpeg/
-$ sudo sh -c "./configure --arch=armel --target-os=linux --enable-gnutls --enable-gpl --enable-libx264 --enable-nonfree; make -j4; make install"
+$ sudo sh -c "./configure --arch=armel --target-os=linux --enable-openssl --enable-gpl --enable-libx264 --enable-nonfree; make -j4; make install"
 ```
 
 # get repositories
@@ -209,8 +209,14 @@ $ cat sshlist | xargs -n1 git clone
 ```
 # unattended-upgrades
 ```
-$ sudo apt-get -y install unattended-upgrade
+$ sudo apt-get -y install unattended-upgrades
 $ sudo dpkg-reconfigure -plow unattended-upgrades
+```
+
+# misc
+```
+# in case, vcgencmd without sudo returns `VCHI initialization failed'
+$ sudo usermod -aG video <username>
 ```
 
 # TODO
