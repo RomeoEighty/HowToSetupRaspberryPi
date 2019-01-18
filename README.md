@@ -217,6 +217,7 @@ $ sudo dpkg-reconfigure -plow unattended-upgrades
 ```
 # in case, vcgencmd without sudo returns `VCHI initialization failed'
 $ sudo usermod -aG video <username>
+$ sudo npm install -g diff-so-fancy
 ```
 
 # TODO
