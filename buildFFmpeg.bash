@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
 unset CDPATH
+set -eu
 
 # http://www.praveen.life/2016/06/26/compile-ffmpeg-for-raspberry-pi-3/
 
 function logout1
 {
     :
-    # echo $*
+    echo $*
 }
 
 function getSourceDirectoryPath
@@ -42,67 +43,66 @@ function getSourceDirectoryPath
 
 function installlibX264
 {
-    cd "${DirectoryPathOfScript}/${DependencyDirectory}"
-    if [ -d "x264" ]; then
+    cd "${DependencyDirectoryPath}"
+    if [ ! -d "x264" ]; then
         git clone http://git.videolan.org/git/x264.git
-        cd "${DirectoryPathOfScript}/${DependencyDirectory}/x264"
+        cd "${DependencyDirectoryPath}/x264"
     else
-        cd "${DirectoryPathOfScript}/${DependencyDirectory}/x264"
+        cd "${DependencyDirectoryPath}/x264"
         git pull
-        make clean
+        # make clean
     fi
-    ./configure --enable-static --prefix="${ScriptPath}/ffmpeg/${DependencyDirectory}/${DependencyOutputDirectory}/"
+    ./configure --enable-static --prefix="${DependencyOutputDirectoryPath}/"
     make -j4
-    make install
-    cd "${DirectoryPathOfScript}/${DependencyDirectory}"
+    sudo make install
+    cd "${DependencyDirectoryPath}"
 }
 
 function installALSA
 {
-    cd "${DirectoryPathOfScript}/${DependencyDirectory}"
-    if [ -d alsa-lib-1.1.1 ]; then
+    cd "${DependencyDirectoryPath}"
+    if [ ! -d alsa-lib-1.1.1 ]; then
         wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.1.1.tar.bz2
         tar xjf alsa-lib-1.1.1.tar.bz2
-        cd "${DirectoryPathOfScript}/${DependencyDirectory}/alsa-lib-1.1.1/"
-        ./configure --prefix=/home/pi/ffmpeg/dependencies/output
+        cd "${DependencyDirectoryPath}/alsa-lib-1.1.1/"
+        ./configure --prefix="${DependencyOutputDirectoryPath}"
         make -j4
-        make install
-        cd "${DirectoryPathOfScript}/${DependencyDirectory}"
+        sudo make install
+        cd "${DependencyDirectoryPath}"
     fi
 }
 
 function installFDKAAC
 {
-    cd "${DirectoryPathOfScript}/${DependencyDirectory}"
-    if [ -d "fdk-aac" ]; then
+    cd "${DependencyDirectoryPath}"
+    if [ ! -d "fdk-aac" ]; then
         git clone https://github.com/mstorsjo/fdk-aac.git
-        cd "${DirectoryPathOfScript}/${DependencyDirectory}/fdk-aac"
+        cd "${DependencyDirectoryPath}/fdk-aac"
     else
-        cd "${DirectoryPathOfScript}/${DependencyDirectory}/fdk-aac"
+        cd "${DependencyDirectoryPath}/fdk-aac"
         git pull
-        make clean
+        # make clean
     fi
     ./autogen.sh
     ./configure --enable-shared --enable-static
     make -j4
-    make install
-    ldconfig
-    cd "${DirectoryPathOfScript}/${DependencyDirectory}"
+    sudo make install
+    sudo ldconfig
+    cd "${DependencyDirectoryPath}"
 }
 
 function installFFmpeg
 {
-    cd "${DirectoryPathOfScript}"
-    cd ..
+    cd "${DirectoryPathOfScript}/ffmpeg"
     ./configure \
-        --prefix="${ScriptPath}/ffmpeg/${DependencyDirectory}/${DependencyOutputDirectory}" \
+        --prefix="${DependencyOutputDirectoryPath}" \
         --enable-gpl --enable-libx264 --enable-nonfree --enable-libfdk_aac \
         --enable-omx --enable-omx-rpi \
-        --extra-cflags="-I${ScriptPath}/ffmpeg/${DependencyDirectory}/${DependencyOutputDirectory}/include" \
-        --extra-ldflags="-L${ScriptPath}/ffmpeg/${DependencyDirectory}/${DependencyOutputDirectory}/lib" \
-        --extra-libs="-lx264 -lpthread -lm -ldl" \
+        --extra-cflags="-I${DependencyOutputDirectoryPath}/include" \
+        --extra-ldflags="-L${DependencyOutputDirectoryPath}/lib" \
+        --extra-libs="-lx264 -lpthread -lm -ldl"
     make -j4
-    make install
+    sudo make install
 }
 
 DirectoryPathOfScript=""
@@ -114,18 +114,21 @@ DependencyOutputDirectory="output"
 
 function createDirectoryIfNotExists
 {
-    if [ -d "$1" ]; then
-        mkdir "${ScriptPath}/$1"
+    if [ ! -d "$1" ]; then
+        mkdir "$1"
     fi
 }
 
-if [ -d "./ffmpeg" ]; then
+if [ ! -d "./ffmpeg" ]; then
     git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg
 fi
 cd ffmpeg
 createDirectoryIfNotExists "${DependencyDirectory}"
-cd "${DependencyOutputDirectory}"
+DependencyDirectoryPath="${DirectoryPathOfScript}/ffmpeg/${DependencyDirectory}"
+cd "${DependencyDirectoryPath}"
 createDirectoryIfNotExists "${DependencyOutputDirectory}"
+DependencyOutputDirectoryPath="${DependencyDirectoryPath}/${DependencyOutputDirectory}"
+cd "${DependencyOutputDirectoryPath}"
 
 installlibX264
 
@@ -133,6 +136,6 @@ installALSA
 
 installFDKAAC
 
-apt-get -y install pkg-config autoconf automake libtool
+sudo apt-get -y install pkg-config autoconf automake libtool libomxil-bellagio-dev
 
 installFFmpeg
